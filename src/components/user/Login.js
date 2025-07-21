@@ -12,17 +12,15 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isAuthenticated, loading, error } = useSelector(state => state.auth);
-    console.log(isAuthenticated, loading, error);
+    const { isAuthenticated, error } = useSelector(state => state.auth);
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/');
         }
-    }, [isAuthenticated, navigate, loading]);
+    }, [isAuthenticated, navigate]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(email, password);
         dispatch(login(email, password));
     };
 
@@ -74,9 +72,8 @@ const Login = () => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            disabled={loading}
                         >
-                            {loading ? 'Signing In...' : 'Sign In'}
+                            Sign In
                         </Button>
                         {error && (
                             <Typography color="error" align="center">
