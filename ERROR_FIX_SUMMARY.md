@@ -73,3 +73,8 @@ catch (error) {
 ✅ All ESLint warnings addressed (except minor unused variables)
 
 The application should no longer crash with "Cannot read properties of undefined" errors when API calls fail.
+
+## Additional Fix (2025-09-20)
+
+- Problem: The login page was sometimes not accessible because stale authentication state was being restored from Redux Persist. This led the app to think the user was authenticated when they were not, resulting in navigation away from `/login`.
+- Fix: Stopped persisting the `auth` slice in `src/store.js` (whitelist now only includes `cart`). This ensures the app doesn't restore stale `isAuthenticated` state on page load.
