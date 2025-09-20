@@ -46,7 +46,12 @@ import { Box } from '@mui/material';
 
 const App = () => {
   useEffect(() => {
-    store.dispatch(loadUser());
+    // Only attempt to load the current user if a token is present.
+    // Avoids an immediate 401 request to the /me endpoint when no user is logged in.
+    const token = localStorage.getItem('token');
+    if (token) {
+      store.dispatch(loadUser());
+    }
   }, []);
 
   return (

@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'https://abadyzshopapi.onrender.com/api/v1' });
+// Use REACT_APP_API_BASE_URL when provided, otherwise fall back to the
+// hard-coded URL that was previously used in the project.
+const baseURL = process.env.REACT_APP_API_BASE_URL || 'https://abadyzshopapi.onrender.com/api/v1';
+const API = axios.create({ baseURL });
 
 API.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
