@@ -9,6 +9,7 @@ import {
 
 import { getAllUsers as getterOfAll } from '../api/index';
 import { getUserDetails as getter, updateUser as updater } from '../api/index';
+import { getErrorMessage } from '../utils/errorHandler';
 
 export const getAllUsers = () => async (dispatch) => {
     try {
@@ -24,7 +25,7 @@ export const getAllUsers = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: ALL_USERS_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -36,7 +37,7 @@ export const getUserDetails = (id) => async (dispatch) => {
         const { data } = await getter(id);
         dispatch({ type: 'USER_DETAILS_SUCCESS', payload: data.user });
     } catch (error) {
-        dispatch({ type: 'USER_DETAILS_FAIL', payload: error.response.data.message });
+        dispatch({ type: 'USER_DETAILS_FAIL', payload: getErrorMessage(error) });
     }
 };
 
@@ -46,7 +47,7 @@ export const updateUser = (id, userData) => async (dispatch) => {
         const { data } = await updater(id, userData);
         dispatch({ type: 'UPDATE_USER_SUCCESS', payload: data.success });
     } catch (error) {
-        dispatch({ type: 'UPDATE_USER_FAIL', payload: error.response.data.message });
+        dispatch({ type: 'UPDATE_USER_FAIL', payload: getErrorMessage(error) });
     }
 };
 

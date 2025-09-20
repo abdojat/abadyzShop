@@ -9,21 +9,34 @@ import {
     getProductDetails
 } from '../api/index';
 
-export const addToCart = (id, quantity) => async (dispatch, getState) => {
-    const { data } = await getProductDetails(id);
-    console.log(data.product);
-    dispatch({
-        type: ADD_TO_CART,
-        payload: {
-            product: data.product._id,
-            name: data.product.name,
-            price: data.product.price,
-            image: data.product.images[0],
-            stock: data.product.stock,
-            quantity
-        }
-    });
+import { getErrorMessage } from '../utils/errorHandler';
 
+export const addToCart = (id, quantity) => async (dispatch, getState) => {
+    try {
+        const { data } = await getProductDetails(id);
+        console.log(data.product);
+        
+        // Add safety check for product data
+        if (!data || !data.product) {
+            throw new Error('Product data not found');
+        }
+        
+        dispatch({
+            type: ADD_TO_CART,
+            payload: {
+                product: data.product._id,
+                name: data.product.name,
+                price: data.product.price,
+                image: data.product.images?.[0] || { url: '' },
+                stock: data.product.stock,
+                quantity
+            }
+        });
+    } catch (error) {
+        console.error('Add to cart error:', getErrorMessage(error));
+        // You might want to dispatch an error action here if you have one
+        throw error; // Re-throw so UI can handle it
+    }
 };
 
 export const removeFromCart = (id) => async (dispatch, getState) => {

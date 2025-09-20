@@ -15,7 +15,7 @@ import * as serviceWorker from './serviceWorker';
 setupPerformanceMonitoring();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const stripePromise = loadStripe('pk_test_51RY206P5UUIbC8HOkTA9PkE50cSO6VbergHsd0od1VwgzOARmDNSEpq1HNkdEPJPdcqiiMoUD1pPDakjBdFrYM5d008HkJIJ3i');
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PK);
 
 root.render(
   <Provider store={store}>
@@ -29,5 +29,10 @@ root.render(
   </Provider>
 );
 
-// Register service worker for offline support and caching
-serviceWorker.register();
+// Register service worker for offline support and caching only in production.
+// During development we unregister to avoid stale cached bundles causing confusing runtime errors.
+if (process.env.NODE_ENV === 'production') {
+  serviceWorker.register();
+} else {
+  serviceWorker.unregister();
+}

@@ -29,6 +29,8 @@ import { getProducts as fetchProducts,
     createReview
 } from '../api/index';
 
+import { getErrorMessage } from '../utils/errorHandler';
+
 // Get all products - ADMIN
 export const getAdminProducts = () => async (dispatch) => {
     try {
@@ -43,7 +45,7 @@ export const getAdminProducts = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: ADMIN_PRODUCTS_FAIL,
-            payload: error
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -63,7 +65,7 @@ export const createProduct = (productData) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: NEW_PRODUCT_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -83,7 +85,7 @@ export const updateProduct = (id, productData) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: UPDATE_PRODUCT_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -103,7 +105,7 @@ export const deleteProduct = (id) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: DELETE_PRODUCT_FAIL,
-            payload: error.response
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -123,7 +125,7 @@ export const getProductDetails = (id) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: PRODUCT_DETAILS_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -147,7 +149,7 @@ export const getProducts = (keyword = '', currentPage = 1, price = [0, 1000], ca
     } catch (error) {
         dispatch({
             type: 'ALL_PRODUCTS_FAIL',
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -167,7 +169,7 @@ export const createProductReview = (reviewData) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: NEW_REVIEW_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };

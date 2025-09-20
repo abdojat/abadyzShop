@@ -36,13 +36,16 @@ import {
 } from '../api/index';
 
 import { clearCart } from './cartActions';
+import { getErrorMessage } from '../utils/errorHandler';
 
 // Login user
 export const login = (email, password) => async (dispatch) => {
     try {
         dispatch({ type: LOGIN_REQUEST });
-        const { data } = await loginUser({ email, password });
-        localStorage.setItem('token',data.token);
+        const resp = await loginUser({ email, password });
+        const data = (resp && resp.data) ? resp.data : resp;
+        if (!data) throw new Error('Empty response from login API');
+        if (data.token) localStorage.setItem('token', data.token);
         dispatch({
             type: LOGIN_SUCCESS,
             payload: data.user
@@ -51,7 +54,7 @@ export const login = (email, password) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: LOGIN_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -60,8 +63,10 @@ export const login = (email, password) => async (dispatch) => {
 export const register = (userData) => async (dispatch) => {
     try {
         dispatch({ type: REGISTER_REQUEST });
-        const { data } = await registerUser(userData);
-        localStorage.setItem('token',data.token);
+        const resp = await registerUser(userData);
+        const data = (resp && resp.data) ? resp.data : resp;
+        if (!data) throw new Error('Empty response from register API');
+        if (data.token) localStorage.setItem('token', data.token);
         dispatch({
             type: REGISTER_SUCCESS,
             payload: data.user
@@ -70,7 +75,7 @@ export const register = (userData) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: REGISTER_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -80,7 +85,9 @@ export const loadUser = () => async (dispatch) => {
     try {
         dispatch({ type: LOAD_USER_REQUEST });
 
-        const { data } = await loader();
+        const resp = await loader();
+        const data = (resp && resp.data) ? resp.data : resp;
+        if (!data) throw new Error('Empty response from loadUser API');
         dispatch({
             type: LOAD_USER_SUCCESS,
             payload: data.user
@@ -89,7 +96,7 @@ export const loadUser = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: LOAD_USER_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -107,7 +114,7 @@ export const logout = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: LOGOUT_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -127,7 +134,7 @@ export const updateProfile = (userData) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: UPDATE_PROFILE_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -146,7 +153,7 @@ export const updatePassword = (passwords) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: UPDATE_PASSWORD_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -165,7 +172,7 @@ export const forgotPassword = (email) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: FORGOT_PASSWORD_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -185,7 +192,7 @@ export const resetPassword = (token, passwords) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: 'RESET_PASSWORD_FAIL',
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };

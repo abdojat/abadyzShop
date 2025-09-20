@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
     ALL_ORDERS_REQUEST,
     ALL_ORDERS_SUCCESS,
@@ -22,7 +21,9 @@ import {
     updateOrder as updator,
     deleteOrder as deleter,
     getOrderDetails as getterById,
-} from '../api/index'
+} from '../api/index';
+
+import { getErrorMessage } from '../utils/errorHandler';
 // Get all orders - ADMIN
 export const getAllOrders = () => async (dispatch) => {
     try {
@@ -38,7 +39,7 @@ export const getAllOrders = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: ALL_ORDERS_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -58,7 +59,7 @@ export const updateOrder = (id, orderData) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: UPDATE_ORDER_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -78,7 +79,7 @@ export const deleteOrder = (id) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: DELETE_ORDER_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -98,7 +99,7 @@ export const getOrderDetails = (id) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: ORDER_DETAILS_FAIL,
-            payload: error.response.data.message
+            payload: getErrorMessage(error)
         });
     }
 };
@@ -110,7 +111,7 @@ export const createOrder = (orderData) => async (dispatch) => {
         const { data } = await creator(orderData);
         dispatch({ type: 'CREATE_ORDER_SUCCESS', payload: data });
     } catch (error) {
-        dispatch({ type: 'CREATE_ORDER_FAIL', payload: error.response.data.message });
+        dispatch({ type: 'CREATE_ORDER_FAIL', payload: getErrorMessage(error) });
     }
 };
 
@@ -119,7 +120,7 @@ export const myOrders = () => async (dispatch) => {
         const { data } = await mine();
         dispatch({ type: 'MY_ORDERS_SUCCESS', payload: data.orders });
     } catch (error) {
-        dispatch({ type: 'MY_ORDERS_FAIL', payload: error.response.data.message });
+        dispatch({ type: 'MY_ORDERS_FAIL', payload: getErrorMessage(error) });
     }
 };
 
